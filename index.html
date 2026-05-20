@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Курс по Figma | От новичка до профи</title>
+<style>
+:root {
+  --bg-body: #0f172a; --bg-sidebar: #111827; --bg-card: #1e293b;
+  --bg-code: #0b1221; --accent: #f59e0b; --accent-sec: #0ea5e9;
+  --accent-glow: rgba(245, 158, 11, 0.2); --text-main: #f1f5f9;
+  --text-muted: #94a3b8; --border: #334155;
+  --success: #10b981; --warning: #fbbf24; --error: #ef4444;
+  --radius: 14px; --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg-body); color: var(--text-main);
+  display: flex; min-height: 100vh; overflow-x: hidden; line-height: 1.65;
+}
+/* === SIDEBAR === */
+.sidebar {
+  width: 290px; background: var(--bg-sidebar);
+  border-right: 1px solid var(--border); padding: 1.5rem 0.8rem;
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  z-index: 100; transition: transform 0.3s ease;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.logo {
+  font-size: 1.35rem; font-weight: 800; margin: 0 0.5rem 2rem 0.5rem; padding-bottom: 0.8rem;
+  border-bottom: 2px solid var(--border); color: var(--accent);
+  letter-spacing: -0.5px;
+}
+.nav-group { margin-bottom: 1.5rem; }
+.nav-label {
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-muted); margin: 1rem 0.5rem 0.6rem; font-weight: 600;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px; padding: 0.65rem 0.8rem;
+  margin: 2px 0; border-radius: 10px; cursor: pointer; transition: var(--transition);
+  color: var(--text-muted); font-weight: 500; font-size: 0.92rem;
+  border-left: 3px solid transparent;
+}
+.nav-item:hover { background: rgba(245, 158, 11, 0.08); color: var(--text-main); border-left-color: var(--accent-sec); }
+.nav-item.active {
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.2), transparent);
+  color: var(--accent); border-left-color: var(--accent); font-weight: 600;
+}
+/* === MAIN CONTENT === */
+.main-content { flex: 1; padding: 2.5rem 3rem 4rem; }
+.page { display: none; animation: fadeUp 0.3s ease-out; }
+.page.active { display: block; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.card {
+  background: var(--bg-card); border-radius: var(--radius); padding: 2.2rem;
+  margin-bottom: 2rem; border: 1px solid var(--border); box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+.page-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.8rem 1.2rem; margin-bottom: 1.5rem;
+  background: rgba(14, 165, 233, 0.08); border-radius: var(--radius); border: 1px solid var(--border);
+}
+.nav-btn {
+  padding: 0.6rem 1.2rem; border-radius: 50px; border: none; cursor: pointer;
+  font-weight: 600; font-size: 0.88rem; transition: var(--transition);
+  background: var(--accent-sec); color: #0f172a; box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+}
+.nav-btn:hover { background: #38bdf8; transform: translateY(-2px); }
+.nav-btn:disabled { opacity: 0.5; cursor: default; transform: none; background: var(--border); color: var(--text-muted); box-shadow: none; }
+.nav-btn.secondary { background: transparent; border: 2px solid var(--accent-sec); color: var(--accent-sec); box-shadow: none; }
+.nav-btn.secondary:hover { background: rgba(14, 165, 233, 0.1); }
+h1 { font-size: 1.8rem; margin-bottom: 1.2rem; color: var(--accent); border-bottom: 2px solid var(--border); padding-bottom: 0.6rem; }
+h2 { font-size: 1.4rem; margin: 1.8rem 0 1rem; color: var(--text-main); }
+h3 { font-size: 1.2rem; margin: 1.4rem 0 0.8rem; color: var(--accent-sec); }
+h4 { font-size: 1.05rem; margin: 1rem 0 0.6rem; color: var(--text-main); }
+p, li { line-height: 1.75; color: var(--text-muted); margin-bottom: 0.6rem; }
+ul, ol { margin-left: 1.5rem; margin-bottom: 1rem; }
+code { background: var(--bg-code); padding: 2px 5px; border-radius: 4px; font-family: monospace; font-size: 0.9em; color: #fca311; border: 1px solid var(--border); }
+.code-block {
+  background: var(--bg-code); padding: 1.1rem; border-radius: var(--radius);
+  font-family: monospace; font-size: 0.88rem; margin: 1rem 0;
+  border-left: 3px solid var(--accent); overflow-x: auto; white-space: pre-wrap; border: 1px solid var(--border);
+}
+table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; background: var(--bg-code); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+th, td { border: 1px solid var(--border); padding: 9px 12px; text-align: left; font-size: 0.95rem; }
+th { background: rgba(245, 158, 11, 0.15); color: var(--text-main); font-weight: 600; }
+.note {
+  background: rgba(251, 191, 36, 0.12); border-left: 4px solid var(--warning);
+  padding: 1rem; margin: 1.2rem 0; border-radius: 0 8px 8px 0; color: var(--text-main);
+}
+.highlight { background: rgba(14, 165, 233, 0.2); padding: 2px 6px; border-radius: 4px; color: var(--text-main); }
+.practice-box {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+  border: 2px solid var(--success); border-radius: var(--radius); padding: 1.5rem; margin: 1.5rem 0;
+}
+/* === QUIZ === */
+.question-card { background: var(--bg-card); border-radius: 12px; padding: 1.5rem; border: 2px solid var(--border); margin-bottom: 1.5rem; }
+.options-list { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.8rem; }
+.option-label { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--bg-code); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: var(--transition); }
+.option-label:hover { border-color: var(--accent-sec); background: rgba(14,165,233,0.1); }
+.option-label input { accent-color: var(--accent-sec); width: 16px; height: 16px; }
+.match-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; margin-top: 1rem; background: rgba(14,165,233,0.08); padding: 1rem; border-radius: 10px; }
+.match-col { display: flex; flex-direction: column; gap: 0.6rem; }
+.match-item { padding: 10px; background: var(--bg-code); border: 1px solid var(--border); border-radius: 8px; }
+.match-select { padding: 10px; background: var(--bg-code); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); width: 100%; }
+.feedback { margin-top: 1rem; padding: 1rem; border-radius: 8px; border-left: 3px solid var(--accent-sec); background: rgba(14,165,233,0.1); }
+.correct { border-left-color: var(--success); background: rgba(16,185,129,0.1); }
+.wrong { border-left-color: var(--error); background: rgba(239,68,68,0.1); }
+.pagination { display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem; flex-wrap: wrap; }
+.page-btn { background: var(--bg-card); border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: var(--text-muted); transition: var(--transition); }
+.page-btn.active-page-btn { background: var(--accent-sec); color: #0f172a; border-color: var(--accent-sec); }
+/* === RESPONSIVE === */
+.menu-toggle { display: none; position: fixed; top: 1rem; left: 1rem; z-index: 200; background: var(--accent-sec); border: none; color: #0f172a; padding: 0.6rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; }
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); width: 260px; }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-left: 0; padding: 1.5rem; }
+  .menu-toggle { display: block; }
+  .match-grid { grid-template-columns: 1fr; gap: 0.8rem; }
+}
+</style>
+</head>
+<body>
+<button class="menu-toggle" id="menuToggle">☰ Навигация</button>
+<aside class="sidebar" id="sidebar">
+  <div class="logo">🎨 Курс по Figma</div>
+  <div class="nav-group">
+    <div class="nav-label">📚 Лекции и практики</div>
+    <div class="nav-item active" data-page="lec1">1. Введение в Figma</div>
+    <div class="nav-item" data-page="prac1">Практика 1</div>
+    <div class="nav-item" data-page="lec2">2. Фреймы и сетки</div>
+    <div class="nav-item" data-page="lec3">3. Вектор и типографика</div>
+    <div class="nav-item" data-page="prac3">Практика 3</div>
+    <div class="nav-item" data-page="lec4">4. Компоненты</div>
+    <div class="nav-item" data-page="prac4">Практика 4</div>
+    <div class="nav-item" data-page="lec5">5. Auto Layout</div>
+    <div class="nav-item" data-page="prac5">Практика 5</div>
+    <div class="nav-item" data-page="lec6">6. Прототипирование</div>
+    <div class="nav-item" data-page="prac6">Практика 6</div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">📝 Проверка знаний</div>
+    <div class="nav-item" data-page="test">✅ Итоговый тест</div>
+  </div>
+</aside>
+
+<main class="main-content" id="mainContent">
+<!-- ЛЕКЦИЯ 1 -->
+<section id="lec1" class="page active">
+  <div class="card">
+    <div class="page-nav"><button class="nav-btn disabled">← Назад</button><button class="nav-btn secondary" data-page="prac1">К практике →</button></div>
+    <h1>📖 ЛЕКЦИЯ 1. ВВЕДЕНИЕ В FIGMA: ОСНОВЫ ДИЗАЙНА ИНТЕРФЕЙСОВ</h1>
+    <h3>1. Определение Figma, история создания и область применения</h3>
+    <p><strong>Figma</strong> — это векторный графический редактор для проектирования интерфейсов, который работает прямо в браузере. В отличие от Photoshop или Adobe XD, Figma не требует установки и позволяет нескольким дизайнерам одновременно работать над одним файлом.</p>
+    <p>Создатели Figma — американские разработчики во главе с <strong>Диланом Филдом</strong>. Первая версия была выпущена в 2016 году. Основная идея: сделать дизайн доступным для команд, избавиться от проблемы «скинул макет в ZIP» и хранить всю историю изменений в облаке.</p>
+    <p><strong>Ключевая область применения:</strong> веб-дизайн, мобильный дизайн (iOS/Android), создание прототипов, дизайн презентаций и векторных иллюстраций.</p>
+    <div class="note">💡 Figma стала стандартом, потому что разработчику больше не нужно «вырезать» иконки или угадывать отступы — всё хранится в одном месте с автоматическими спецификациями.</div>
+    <h3>2. Интерфейс программы: панели, инструменты, рабочая область</h3>
+    <ol>
+      <li><strong>Toolbar:</strong> инструменты для фигур, текста, комментариев, перо.</li>
+      <li><strong>Layers:</strong> иерархия объектов (аналог HTML-дерева).</li>
+      <li><strong>Canvas:</strong> бесконечное полотно для фреймов.</li>
+      <li><strong>Right Sidebar:</strong> шрифты, отступы, цвета, тени (будущий CSS).</li>
+      <li><strong>Assets:</strong> переиспользуемые компоненты.</li>
+    </ol>
+    <p><em>Отличие от Photoshop:</em> в Figma нет «пиксельной магии». Вы работаете с вектором, а размеры задаёте в пикселях (px), что делает макет близким к верстке.</p>
+    <h3>3. Работа со слоями и фреймами. Понятие компонентов и вариантов</h3>
+    <p><strong>Фрейм (Frame)</strong> — аналог <code>body</code> или <code>div</code> в HTML. Каждый экран — отдельный фрейм.</p>
+    <p><strong>Компоненты (Components)</strong> — киллер-фича. Вы создаёте элемент → <code>Ctrl + Alt + K</code> → он становится компонентом. Копии обновляются автоматически при изменении исходника.</p>
+    <p><strong>Варианты (Variants)</strong> объединяют состояния одного компонента (обычная, hover, неактивная). В коде это CSS-классы или состояния React-компонента.</p>
+    <h3>4. Стили и сетки. Создание адаптивного макета</h3>
+    <ul>
+      <li><strong>Стили:</strong> палитра цветов и набор стилей для заголовков. Экспорт генерирует HEX, RGB или CSS-переменные.</li>
+      <li><strong>Сетки (Layout Grids):</strong> Grid (как CSS Grid) и Columns (как Bootstrap).</li>
+    </ul>
+    <p><strong>Адаптивность:</strong> Figma позволяет создавать <span class="highlight">Auto Layout</span> — аналог CSS Flexbox. Вы задаёте направление, отступы и поведение. Спецификации содержат готовые <code>display: flex, gap, padding</code>.</p>
+    <h3>5. Прототипирование и связи между экранами</h3>
+    <div class="code-block">1. Переключитесь на вкладку Prototype
+2. Кликните элемент → перетащите «молнию» на другой фрейм
+3. Настройте триггер (On Click, Hover) и анимацию (Instant, Slide, Push)</div>
+    <h3>6. Совместная работа и передача макета верстальщику</h3>
+    <ol>
+      <li><strong>Dev Mode:</strong> показывает CSS-свойства элемента.</li>
+      <li><strong>Экспорт ассетов:</strong> PNG для сложных, SVG для иконок.</li>
+      <li><strong>Спецификации:</strong> зажмите <code>Alt</code> — Figma покажет расстояние до элементов.</li>
+    </ol>
+    <div class="note">⚠️ Главное правило: разработчик не должен додумывать размеры. Если в макете 24px — в коде <code>margin: 24px</code>.</div>
+    <h3>Вывод</h3>
+    <p>Вы познакомились с Figma, изучили интерфейс, фреймы (div), компоненты, варианты, Auto Layout (Flexbox) и сетки (Grid). Понимание этих принципов позволяет дизайнеру и разработчику говорить на одном языке.</p>
+  </div>
+</section>
+
+<!-- ПРАКТИКА 1 -->
+<section id="prac1" class="page">
+  <div class="card">
+    <div class="page-nav"><button class="nav-btn" data-page="lec1">← Лекция 1</button><button class="nav-btn secondary" data-page="lec2">К лекции 2 →</button></div>
+    <h1>🛠️ ПРАКТИКА 1</h1>
+    <div class="practice-box"><h3>🎯 Цели:</h3><ol><li>Создавать и настраивать фреймы</li><li>Освоить Auto Layout</li><li>Создавать компоненты и варианты</li><li>Стилизировать текст/цвета под CSS</li><li>Строить прототипы и экспортировать ассеты</li></ol></div>
+    <h3>📋 Задания:</h3>
+    <ol>
+      <li>Зарегистрируйтесь в Figma, создайте файл «Мой первый дизайн-система».</li>
+      <li>Создайте фрейм 1440×1024 px (клавиша F → Desktop).</li>
+      <li>Создайте прямоугольник (R) шириной на весь фрейм, высотой 80 px. Цвет <code>#2C3E50</code> (шапка).</li>
+      <li>Добавьте логотип «Мой Бренд» (T), цвет <code>#FFFFFF</code>, 24px, Bold. Отступ слева 40px.</li>
+      <li>Создайте три пункта меню. Разместите справа с отступом 40px, цвет <code>#FFFFFF</code>, 16px, gap: 30px (Shift + A → Auto Layout).</li>
+      <li>Создайте фрейм 1200×600 px, выровняйте по центру через Auto Layout родителя (Justify: Center).</li>
+      <li>Внутри создайте H1 «Дизайн, который превращается в код» (48px, <code>#2C3E50</code>) и абзац 18px (<code>#7F8C8D</code>). Auto Layout, вертикаль, gap: 20px.</li>
+      <li>Создайте кнопку (200×50px, radius 8px, <code>#3498DB</code>). Текст «Начать проект». Тень: <code>X:0, Y:4, Blur:6, rgba(0,0,0,0.1)</code>.</li>
+      <li>Создайте компонент «Карточка товара»: 300×400px, radius 12px, белый, тень. Внутри: заглушка, заголовок, цена, кнопка. <code>Ctrl + Alt + K</code> → «ProductCard».</li>
+      <li>Создайте 3 экземпляра. Разместите в ряд через Auto Layout, gap: 30px.</li>
+      <li>Измените исходный компонент. Убедитесь, что все обновились. Измените текст в одном — он переопределится.</li>
+      <li>Создайте вариант кнопки: Property «State» → «Default» / «Hover». Для Hover: фон <code>#2980B9</code>, тень больше.</li>
+      <li>Создайте цветовую панель: 5 квадратов 50×50px. Выделите каждый → иконка 4 точек → «Create style». Назовите: color/primary и т.д.</li>
+      <li>Создайте текстовые стили: H1 (48px Bold) → typography/h1. Абзац (16px) → typography/body.</li>
+      <li>Настройте сетку: 12 колонок, Gutter 20px, Margin 40px.</li>
+      <li>Прототип: соедините кнопку с фреймом «Спасибо за заявку». Анимация: Push → Left → 300ms.</li>
+      <li>Добавьте переход на «Спасибо» → «На главную» с Dissolve 200ms.</li>
+      <li>Экспортируйте иконку корзины в SVG, масштаб 1x.</li>
+      <li>Включите Dev Mode. Выпишите CSS-свойства кнопки.</li>
+      <li>Экспортируйте спецификации: «Copy as CSS».</li>
+    </ol>
+    <div class="note"><strong>🎁 Бонус (21):</strong> Создайте «Адаптивную карточку» с Auto Layout. Установите Fill container. Потяните за край — контент перестроится.</div>
+  </div>
+</section>
+
+<!-- ЛЕКЦИЯ 2 -->
+<section id="lec2" class="page">
+  <div class="card">
+    <div class="page-nav"><button class="nav-btn secondary" data-page="prac1">← Практика 1</button><button class="nav-btn secondary" data-page="lec3">К лекции 3 →</button></div>
+    <h1>📐 ЛЕКЦИЯ 2. ФРЕЙМЫ, СЕТКИ И КОМПОЗИЦИЯ: УЧИМСЯ ВЕРСТАТЬ ЭКРАНЫ</h1>
+    <h3>1. Фреймы как основа макета. Отличие фрейма от группы</h3>
+    <p><strong>Фрейм</strong> — аналог body/div. В нём можно задать фон, скролл, сетку.</p>
+    <p><strong>Отличие от группы:</strong> Фрейм имеет структуру слоёв, сетку, Auto Layout и свойство Clip content. Группа — просто логическое объединение. Всегда используйте фреймы для экранов и крупных блоков.</p>
+    <h3>2. Сетки в Figma: Grid, Columns, Rows</h3>
+    <p>Сетка помогает выравнивать элементы. Выделите фрейм → Layout Grid → плюс.</p>
+    <ul>
+      <li><strong>Grid:</strong> ячеистая сетка (как CSS Grid).</li>
+      <li><strong>Columns:</strong> колоночная сетка. Самый популярный тип (12 колонок для веба, 8 для мобильных).</li>
+      <li><strong>Rows:</strong> строчная сетка (реже).</li>
+    </ul>
+    <h3>3. Настройка отступов и полей (Margin, Gutter)</h3>
+    <p><strong>Count:</strong> кол-во колонок. <strong>Gutter:</strong> расстояние между ними (gap в CSS). <strong>Margin:</strong> отступы от края фрейма (padding контейнера).</p>
+    <p>Пример для десктопа: Count=12, Gutter=20px, Margin=40px. Для мобильного (375px): Count=4, Gutter=16px, Margin=16px.</p>
+    <h3>4. Композиция интерфейса: группировка и выравнивание</h3>
+    <p>Принципы хорошей композиции: Близость (связанные элементы рядом), Выравнивание (по сетке/другим элементам), Контраст (управление вниманием), Пространство (отступы важны!).</p>
+    <p>Практический совет: нарисуйте вайрфрейм перед дизайном.</p>
+    <h3>5. Ограничения и адаптивность фреймов</h3>
+    <p><strong>Constraints:</strong> указывают поведение при изменении размера фрейма (Left/Top, Right/Bottom, Center, Left & Right).</p>
+    <p>Адаптивность без Auto Layout: создайте фреймы под Desktop, Tablet, Mobile и адаптируйте вручную.</p>
+    <div class="note">💡 Вы изучили фрейм, сетки, Margin/Gutter, композицию и Constraints. Это основа для создания структурированных макетов.</div>
+  </div>
+</section>
+
+<!-- ЛЕКЦИЯ 3 -->
+<section id="lec3" class="page">
+  <div class="card">
+    <div class="page-nav"><button class="nav-btn secondary" data-page="lec2">← Лекция 2</button><button class="nav-btn secondary" data-page="prac3">К практике 3 →</button></div>
+    <h1>🖌️ ЛЕКЦИЯ 3. ВЕКТОР И ТИПОГРАФИКА: СОЗДАНИЕ ГЕОМЕТРИИ И ТЕКСТА</h1>
+    <h3>1. Векторная графика: фигуры и перо</h3>
+    <p>Figma — векторный редактор. Инструменты: Rectangle (R), Ellipse (O), Line (L), Arrow, Polygon, Pen (P). Pen позволяет рисовать произвольные контуры и кривые Безье.</p>
+    <h3>2. Работа со слоями: заливка, обводка, эффекты</h3>
+    <ul>
+      <li><strong>Fill:</strong> сплошной цвет, градиент, изображение.</li>
+      <li><strong>Stroke:</strong> толщина, цвет, пунктир (Dash/Gap).</li>
+      <li><strong>Effects:</strong> Drop shadow, Inner shadow, Layer blur, Background blur.</li>
+    </ul>
+    <h3>3. Типографика</h3>
+    <p>Настройки текста: Font family, weight, size (px), Line height, Letter spacing, цвет. Выравнивание, переносы, декорация, регистр. В Figma текст остаётся текстом до экспорта.</p>
+    <h3>4. Текстовые стили и пары шрифтов</h3>
+    <p>Текстовые стили — сохранённые наборы параметров (как CSS-классы). Создаются через иконку «Style» → «Create style». Пары шрифтов: один для заголовков, другой для текста (напр. Playfair Display + Source Sans Pro).</p>
+    <h3>5. Экспорт векторных объектов</h3>
+    <p>Экспорт в SVG (лучший выбор для иконок, масштабируется, весит мало, код доступен), PNG, JPG. Плагин «SVG to JSX» преобразует иконку в React-код.</p>
+    <div class="note">💡 Вы освоили векторные инструменты, настройки слоёв, типографику и экспорт. Это позволяет создавать читаемые и легко передаваемые в вёрстку интерфейсы.</div>
+  </div>
+</section>
+
+<!-- ПРАКТИКА 3 -->
+<section id="prac3" class="page">
+  <div class="card">
+    <div class="page-nav"><button class="nav-btn" data-page="lec3">← Лекция 3</button><button class="nav-btn secondary" data-page="lec4">К лекции 4 →</button></div>
+    <h1>🛠️ ПРАКТИКА 3</h1>
+    <h3>📋 Задания:</h3>
+    <ol>
+      <li>Создайте фрейм 1440×1024 px.</li>
+      <li>Нарисуйте квадрат 200×200 px, залейте синим, скругление 16px.</li>
+      <li>Нарисуйте круг 150px, залейте оранжевым.</li>
+      <li>Нарисуйте треугольник, залейте зелёным.</li>
+      <li>Линия 300px, толщина 4px, пунктир.</li>
+      <li>Пером нарисуйте сердечко, залейте красным.</li>
+      <li>Скопируйте сердечко, добавьте Drop Shadow.</li>
+      <li>Карточка 300×400px, белая, обводка 1px, тень.</li>
+      <li>Внутри заголовок (Inter 20px Bold), цена (24px SemiBold), описание (14px Regular, line-height 1.5).</li>
+      <li>Выровняйте текст, задайте отступы.</li>
+      <li>Создайте текстовые стили (typography/title, price, caption, h1, body).</li>
+      <li>Создайте иконку корзины, экспортируйте в SVG (1x).</li>
+      <li>Экспортируйте карточку в PNG (2x).</li>
+      <li>Создайте кнопку «Купить», выровняйте текст.</li>
+      <li>Три варианта иконки «лупа»: контур, серая заливка, градиент.</li>
+      <li><strong>Бонус:</strong> Карточка товара с заглушкой, текстом, кнопкой, иконкой лайка. Экспорт SVG.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ЛЕКЦИЯ 4 -->
+<section id="lec4" class="page">
+  <div class="card">
+    <div class="page-nav"><button class="nav-btn secondary" data-page="prac3">← Практика 3</button><button class="nav-btn secondary" data-page="prac4">К практике 4 →</button></div>
+    <h1>🧩 ЛЕКЦИЯ 4. КОМПОНЕНТЫ И VARIANTS: КАК УСКОРИТЬ РАБОТУ В 10 РАЗ</h1>
+    <h3>1. Мастер-компонент и экземпляры</h3>
+    <p>Компонент — переиспользуемый элемент. Мастер хранится в Assets. Экземпляр — копия с тонкой фиолетовой рамкой.</p>
+    <p>Преимущества: экономия времени, единый стиль, упрощение передачи разработчику.</p>
+    <h3>2. Создание и использование</h3>
+    <p>Создание: <code>Ctrl + Alt + K</code>. Использование: через Assets или копирование. Храните мастера на отдельной странице «UI Kit».</p>
+    <h3>3. Переопределение свойств (Override)</h3>
+    <p>Можно менять текст, цвет заливки, видимость, скругления. Нельзя менять структуру слоёв без разделения.</p>
+    <h3>4. Variants: объединение состояний</h3>
+    <p>Объединяют несколько состояний (Default, Hover, Disabled). Свойства: «State», «Size», «Icon». Один компонент заменяет 27 отдельных.</p>
+    <h3>5. Библиотеки и передача разработчику</h3>
+    <p>Создайте файл, опубликуйте библиотеку. Разработчик использует Dev Mode, видит CSS и варианты. Главное правило: не додумывать состояния. Компоненты — это язык общения дизайнера и верстальщика.</p>
+    <div class="note">💡 Вы научились создавать компоненты, использовать Overrides, Variants и передавать их разработчику.</div>
+  </div>
+</section>
+
+<!-- ПРАКТИКА 4 -->
+<section id="prac4" class="page">
+  <div class="card">
+    <div class="page-nav"><button class="nav-btn" data-page="lec4">← Лекция 4</button><button class="nav-btn secondary" data-page="lec5">К лекции 5 →</button></div>
+    <h1>🛠️ ПРАКТИКА 4</h1>
+    <h3>📋 Задания:</h3>
+    <ol>
+      <li>Создайте фрейм Desktop.</li>
+      <li>Нарисуйте кнопку 200×48px, скругление 8px.</li>
+      <li>Создайте компонент «Button/Primary».</li>
+      <li>Создайте 3 экземпляра, разместите с gap 20px.</li>
+      <li>Измените текст в экземплярах (Купить, Добавить, Оформить).</li>
+      <li>Измените мастер-компонент, убедитесь в обновлении копий.</li>
+      <li>Создайте «Button/Secondary» (прозрачная, серая обводка).</li>
+      <li>Создайте компонент «Card» (300×400px, тень, внутри заглушка, заголовок, цена, кнопка).</li>
+      <li>3 экземпляра Card, измените заголовки.</li>
+      <li>Переопределите цвет кнопки в одном экземпляре.</li>
+      <li>Создайте Variants для кнопки: Default, Hover, Disabled.</li>
+      <li>Переключайте State в правой панели.</li>
+      <li>Добавьте свойство Size: Small, Medium, Large.</li>
+      <li>Создайте «IconButton» с вариантами.</li>
+      <li>Создайте «Input» (300×48px, обводка, placeholder).</li>
+      <li>Добавьте варианты Input: Default, Focus, Error.</li>
+      <li>Создайте страницу «UI Kit», упорядочите компоненты.</li>
+      <li>Создайте документацию для разработчика.</li>
+      <li>Опубликуйте библиотеку и подключите в новом файле.</li>
+      <li><strong>Бонус:</strong> Варианты ProductCard (с картинкой, без, со скидкой).</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ЛЕКЦИЯ 5 -->
+<section id="lec5" class="page">
+  <div class="card">
+    <div class="page-nav"><button class="nav-btn secondary" data-page="prac4">← Практика 4</button><button class="nav-btn secondary" data-page="prac5">К практике 5 →</button></div>
+    <h1>📦 ЛЕКЦИЯ 5. AUTO LAYOUT: ИНТЕЛЛЕКТУАЛЬНАЯ ВЁРСТКА</h1>
+    <h3>1. Аналогия с CSS Flexbox</h3>
+    <p>Auto Layout — аналог Flexbox. Включается через <code>Shift + A</code>. Элементы автоматически выравниваются, меняют размер при изменении контента.</p>
+    <h3>2. Настройка направления, отступов, выравнивания</h3>
+    <p>Direction (Vertical/Horizontal), Justify (Left, Center, Space between), Align (Top, Stretch). Padding задаёт внутренние отступы. Gap — промежутки между элементами.</p>
+    <h3>3. Fill container и Hug contents</h3>
+    <p><strong>Hug contents:</strong> размер по содержимому (<code>width: auto</code>). <strong>Fill container:</strong> растягивается на всю ширину (<code>flex-grow: 1</code>). Часто используют Fill по ширине, Hug по высоте.</p>
+    <h3>4. Вложенные Auto Layout и адаптивность</h3>
+    <p>Вложение позволяет создавать сложные интерфейсы. Wrap (галочка) включает перенос строк (<code>flex-wrap: wrap</code>). При изменении ширины фрейма элементы с Fill растягиваются, с Hug — остаются.</p>
+    <div class="note">⚠️ Любой макет для разработчика должен быть на Auto Layout. Иначе верстальщик будет додумывать отступы.</div>
+  </div>
+</section>
+
+<!-- ПРАКТИКА 5 -->
+<section id="prac5" class="page">
+  <div class="card">
+    <div class="page-nav"><button class="nav-btn" data-page="lec5">← Лекция 5</button><button class="nav-btn secondary" data-page="lec6">К лекции 6 →</button></div>
+    <h1>🛠️ ПРАКТИКА 5</h1>
+    <h3>📋 Задания:</h3>
+    <ol>
+      <li>Создайте фрейм Desktop.</li>
+      <li>3 кнопки → Auto Layout, Horizontal, Gap 20px.</li>
+      <li>Justify: Center, Space between.</li>
+      <li>Вертикальный Auto Layout: заголовок, текст, кнопка. Gap 16px.</li>
+      <li>Добавьте Padding 20px.</li>
+      <li>Карточка товара: вертикальный AL, внутри изображение, заголовок, цена, кнопка (Fill по ширине).</li>
+      <li>3 карточки в ряд, Horizontal AL, Gap 24px.</li>
+      <li>Измените ширину родителя, проверьте фиксированность карточек.</li>
+      <li>Включите Wrap, проверьте перенос строк.</li>
+      <li>Создайте «резиновую» кнопку с Hug contents.</li>
+      <li>Проверьте изменение ширины при смене текста.</li>
+      <li>Форма заказа: лейблы + поля ввода (Fill по ширине).</li>
+      <li>Шапка сайта: логотип (Hug), навигация (Horizontal AL), кнопка (Hug). Justify: Space between.</li>
+      <li>Добавьте аватар в шапку.</li>
+      <li>Карточка новости с Fill по ширине, Hug по высоте.</li>
+      <li>Компонент «ProgressBar» с Fill по ширине.</li>
+      <li>Сетка 3×3 с Wrap и вложенными AL.</li>
+      <li>Перестройте макет магазина на Auto Layout.</li>
+      <li>Скопируйте CSS из Dev Mode.</li>
+      <li><strong>Бонус:</strong> Адаптивный лендинг (3 колонки → 1 колонка).</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ЛЕКЦИЯ 6 -->
+<section id="lec6" class="page">
+  <div class="card">
+    <div class="page-nav"><button class="nav-btn secondary" data-page="prac5">← Практика 5</button><button class="nav-btn secondary" data-page="prac6">К практике 6 →</button></div>
+    <h1>🔗 ЛЕКЦИЯ 6. ПРОТОТИПИРОВАНИЕ И РЕСУРСЫ</h1>
+    <h3>1. Режим Prototype</h3>
+    <p>Прототип — кликабельная модель. Режим Prototype позволяет создавать связи без изменения дизайна.</p>
+    <h3>2. Триггеры и анимация</h3>
+    <p><strong>Триггеры:</strong> On Click, While Hover, After Delay, On Drag, Mouse Enter/Leave.</p>
+    <p><strong>Анимация:</strong> Instant, Dissolve, Slide, Push, Smart Animate. Длительность задаётся в ms.</p>
+    <h3>3. Настройка переходов</h3>
+    <p><strong>Slide:</strong> экран въезжает. <strong>Push:</strong> вытеснение. <strong>Smart Animate:</strong> плавная анимация изменений между одинаково названными элементами (например, перемещение кнопки).</p>
+    <h3>4. Публикация и тестирование</h3>
+    <p>Кнопка «Present». Ссылка «Share» → «Prototype only» скрывает слои. Тестирование на телефоне через Figma Mirror.</p>
+    <h3>5. Ресурсы и плагины</h3>
+    <p><strong>Community:</strong> UI Kits, иконки, шаблоны. Полезные плагины: Iconify, Unsplash, Content Reel, Contrast (доступность), Auto Layout Assistant.</p>
+    <div class="note">🎓 Вы освоили прототипирование, триггеры, анимацию, публикацию и работу с плагинами. Базовый курс завершён!</div>
+  </div>
+</section>
+
+<!-- ПРАКТИКА 6 -->
+<section id="prac6" class="page">
+  <div class="card">
+    <div class="page-nav"><button class="nav-btn" data-page="lec6">← Лекция 6</button><button class="nav-btn secondary" data-page="test">К тесту →</button></div>
+    <h1>🛠️ ПРАКТИКА 6</h1>
+    <h3>📋 Задания:</h3>
+    <ol>
+      <li>Создайте два фрейма «Главная» и «Контакты».</li>
+      <li>На «Главной» кнопка «Перейти в контакты».</li>
+      <li>Свяжите кнопку с «Контакты» (On Click, Instant).</li>
+      <li>На «Контакты» кнопка «Назад», анимация Slide → Left 300ms.</li>
+      <li>Третий фрейм «О нас», навигация, Push-переходы.</li>
+      <li>Выпадающее меню через Smart Animate (200ms).</li>
+      <li>Прототип с Mouse Enter/Leave для карточки.</li>
+      <li>Авто-слайдер (After Delay 3000ms, Dissolve).</li>
+      <li>Модальное окно с On Click и Smart Animate.</li>
+      <li>Экраны формы (ошибка/успех).</li>
+      <li>Опубликуйте прототип (Prototype only).</li>
+      <li>Найдите и дублируйте UI Kit из Community.</li>
+      <li>Адаптируйте компоненты под свою палитру.</li>
+      <li>Скопируйте иконки (Feather/Heroicons).</li>
+      <li>Установите плагин Iconify, вставьте иконку.</li>
+      <li>Unsplash: вставьте 3 изображения.</li>
+      <li>Content Reel: текст, аватар, график.</li>
+      <li>Contrast: проверьте доступность текста.</li>
+      <li>Auto Layout Assistant: проанализируйте макет.</li>
+      <li><strong>Бонус:</strong> Smart Animate-анимация перемещения кнопки.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ТЕСТ -->
+<section id="test" class="page">
+  <div class="card">
+    <h1>✅ ИТОГОВЫЙ ТЕСТ</h1>
+    <p style="margin-bottom:1.5rem;">15 вопросов по всем 6 лекциям курса по Figma.</p>
+  </div>
+  <div id="testsContainer"></div>
+  <div id="pagination" class="pagination"></div>
+</section>
+</main>
+
+<script>
+const QUESTIONS = [
+  {id:1,type:'single',text:'Где по умолчанию работает Figma?',options:['Только как десктоп','Прямо в браузере','Только на iPad','В Adobe Cloud'],correct:[1],explanation:'Figma — облачный редактор, работающий в браузере.'},
+  {id:2,type:'single',text:'Какой HTML-аналог у фрейма (Frame) в Figma?',options:['<img>','<span>','<div> или <body>','<br>'],correct:[2],explanation:'Фрейм — это контейнер, аналогичный div/body.'},
+  {id:3,type:'text',text:'Какое сочетание клавиш создаёт компонент?',correctAnswer:'Ctrl+Alt+K',explanation:'Ctrl+Alt+K превращает объект в мастер-компонент.'},
+  {id:4,type:'single',text:'Какому CSS-свойству соответствует Auto Layout?',options:['display: grid','position: absolute','display: flex','float: left'],correct:[2],explanation:'Auto Layout напрямую транслируется в flexbox.'},
+  {id:5,type:'match',text:'Сопоставьте инструменты Figma с их назначением:',pairs:[['Dev Mode','Просмотр CSS-свойств и спецификаций'],['Auto Layout','Настройка отступов и направлений (Flexbox)'],['Variants','Объединение состояний одного элемента']],explanation:'Dev Mode для кода, AL для вёрстки, Variants для интерактивности.'},
+  {id:6,type:'single',text:'Что позволяет сделать Smart Animate?',options:['Мгновенный переход','Плавную анимацию изменений одинаково названных элементов','Затухание экрана'],correct:[1],explanation:'Smart Animate вычисляет различия и плавно их анимирует.'},
+  {id:7,type:'multiple',text:'Какие форматы экспорта поддерживаются?',options:['SVG','PNG','MP4','PDF'],correct:[0,1,3],explanation:'SVG/PNG/PDF стандартны. MP4 не поддерживается для слоёв.'},
+  {id:8,type:'text',text:'Какой параметр сетки отвечает за расстояние между колонками?',correctAnswer:'gutter',explanation:'Gutter — аналог gap в CSS Grid/Flexbox.'},
+  {id:9,type:'single',text:'Как проверить расстояние до соседнего элемента?',options:['Зажать Shift','Зажать Alt (Option)','Нажать Ctrl+Z'],correct:[1],explanation:'Зажатие Alt показывает точные дистанции.'},
+  {id:10,type:'single',text:'Какой триггер срабатывает при задержке?',options:['On Click','Mouse Enter','After Delay'],correct:[2],explanation:'After Delay используется для слайд-шоу и подсказок.'},
+  {id:11,type:'multiple',text:'Что нельзя переопределить в экземпляре без разделения?',options:['Текст','Структуру слоёв','Видимость','Вложенность'],correct:[1,3],explanation:'Текст, цвет и видимость можно менять. Структуру — нет.'},
+  {id:12,type:'text',text:'Как называется режим скругления углов в Figma?',correctAnswer:'corner radius',explanation:'Corner radius задаёт скругление прямоугольников.'},
+  {id:13,type:'single',text:'Какой плагин проверяет контрастность на соответствие WCAG?',options:['Iconify','Unsplash','Contrast'],correct:[2],explanation:'Плагин Contrast анализирует доступность текста.'},
+  {id:14,type:'match',text:'Сопоставьте режимы изменения размера:',pairs:[['Hug contents','Размер по содержимому'],['Fill container','Растяжение на родителя'],['Fixed','Фиксированный размер']],explanation:'Hug = auto, Fill = flex-grow: 1, Fixed = px.'},
+  {id:15,type:'single',text:'Какая клавиша создаёт фрейм?',options:['R','F','T','P'],correct:[1],explanation:'Клавиша F активирует инструмент Frame.'}
+];
+
+let quiz = { items: [], answers: {}, submitted: false, score: 0, page: 0, perPage: 10 };
+function shuffle(a) { return [...a].sort(() => Math.random() - 0.5); }
+function norm(s) { return String(s||'').trim().toLowerCase(); }
+
+function renderQuiz() {
+  const c = document.getElementById('testsContainer'); if(!c) return;
+  const s = quiz.page * quiz.perPage; const items = quiz.items.slice(s, s+quiz.perPage);
+  const total = Math.ceil(quiz.items.length / quiz.perPage);
+  let html = `<div class="card" style="position:sticky;top:1rem;z-index:10;margin-bottom:1.5rem;background:var(--bg-panel)"><div style="display:flex;justify-content:space-between"><strong>Страница ${quiz.page+1} из ${total}</strong><span id="progText">Прогресс: 0%</span></div><div style="background:var(--border);height:4px;border-radius:4px;margin-top:6px"><div id="progBar" style="background:var(--accent-sec);height:100%;width:0%;transition:0.3s"></div></div></div>`;
+  items.forEach((q, i) => {
+    const idx = s+i, ans = quiz.answers[q.id];
+    html += `<div class="question-card" id="q-${q.id}"><div style="margin-bottom:0.5rem;font-weight:600">${idx+1}. ${q.text}</div>`;
+    if(q.type==='text') html += `<input type="text" class="t-input" data-id="${q.id}" value="${ans||''}" placeholder="Ваш ответ..." style="width:100%;padding:10px;background:var(--bg-code);border:1px solid var(--border);border-radius:6px;color:var(--text-main)">`;
+    else if(q.type==='match') {
+      html += `<div class="match-grid"><div class="match-col">${q.pairs.map(p=>`<div class="match-item">${p[0]}</div>`).join('')}</div><div>↔</div><div class="match-col">`;
+      q.pairs.forEach((p, pi) => { const val = ans&&ans[pi]!==undefined ? ans[pi] : '';
+        html += `<select class="match-select" data-id="${q.id}" data-pi="${pi}"><option value="">— Выберите —</option>${q.pairs.map(op=>`<option value="${op[1]}"${val===op[1]?' selected':''}>${op[1]}</option>`).join('')}</select>`;
+      });
+      html += `</div></div>`;
+    } else {
+      html += `<div class="options-list">`;
+      q.options.forEach((o, oi) => { const chk = Array.isArray(ans) ? ans.includes(oi) : ans===oi;
+        html += `<label class="option-label"><input type="${q.type==='single'?'radio':'checkbox'}" data-id="${q.id}" data-oi="${oi}" ${chk?'checked':''}> ${o}</label>`;
+      });
+      html += `</div>`;
+    }
+    if(quiz.submitted) {
+      let ok=false;
+      if(q.type==='text') ok = norm(q.correctAnswer)===norm(ans);
+      else if(q.type==='match') { if(ans && Object.keys(ans).length===q.pairs.length) ok=true; if(ok) q.pairs.forEach((p,pi)=>{if(ans[pi]!==p[1])ok=false;}); }
+      else { const u = Array.isArray(ans)?ans.slice().sort():[]; const cc = q.correct.slice().sort(); ok = u.length===cc.length && u.every((v,k)=>v===cc[k]); }
+      if(ok) quiz.score++;
+      html += `<div class="feedback ${ok?'correct':'wrong'}"><strong>${ok?'✓ Верно':'✗ Неверно'}</strong><br>${q.explanation}</div>`;
+    }
+    html += `</div>`;
+  });
+  html += `<div style="display:flex;justify-content:space-between;margin-top:1.5rem"><button class="page-btn" id="prevBtn"${quiz.page===0?' disabled':''}>← Назад</button><button class="page-btn" id="nextBtn"${quiz.page>=total-1?' disabled':''}>Вперёд →</button></div>`;
+  if(!quiz.submitted && quiz.page===total-1) html += `<div style="text-align:center;margin-top:1.5rem"><button id="submitBtn" class="nav-btn" style="width:100%">✅ Завершить и проверить</button></div>`;
+  if(quiz.submitted) { const pct=Math.round((quiz.score/quiz.items.length)*100);
+    html = `<div class="card" style="text-align:center;border:2px solid var(--accent-sec);margin-bottom:2rem"><h2>Результат: ${quiz.score}/${quiz.items.length} (${pct}%)</h2><button id="resetBtn" class="nav-btn" style="margin-top:1rem">🔄 Пройти заново</button></div>` + html;
+  }
+  c.innerHTML = html; updateProg();
+}
+function updateProg() {
+  const ans = Object.keys(quiz.answers).filter(k=>{const v=quiz.answers[k]; return v!==undefined && v!=='' && (Array.isArray(v)?v.length>0:typeof v==='object'?Object.keys(v).length>0:true);}).length;
+  const p = Math.round((ans/quiz.items.length)*100);
+  const b=document.getElementById('progBar'), t=document.getElementById('progText'); if(b)b.style.width=p+'%'; if(t)t.textContent=`Прогресс: ${p}%`;
+}
+function initQuiz() { quiz = { items: shuffle(QUESTIONS), answers: {}, submitted: false, score: 0, page: 0, perPage: 10 }; renderQuiz(); }
+
+// ======================== NAVIGATION ========================
+const pages = ['lec1','prac1','lec2','lec3','prac3','lec4','prac4','lec5','prac5','lec6','prac6','test'];
+let cur = 'lec1';
+function show(id) {
+  pages.forEach(p => { const e=document.getElementById(p); if(e){e.classList.remove('active');e.setAttribute('aria-hidden','true');} });
+  const a = document.getElementById(id); if(a){a.classList.add('active');a.setAttribute('aria-hidden','false');}
+  cur=id;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.page===id));
+  if(id==='test') initQuiz();
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(window.innerWidth<=900) document.getElementById('sidebar').classList.remove('open');
+}
+document.querySelectorAll('.nav-item').forEach(n=>n.addEventListener('click', ()=>show(n.dataset.page)));
+document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.addEventListener('click', ()=>show(b.dataset.page)));
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  show('lec1');
+  document.getElementById('menuToggle').addEventListener('click', ()=>document.getElementById('sidebar').classList.toggle('open'));
+  document.addEventListener('click', e=>{
+    const t=e.target.closest('button'); if(!t)return;
+    if(t.id==='prevBtn'&&quiz.page>0){quiz.page--;renderQuiz();}
+    if(t.id==='nextBtn'&&quiz.page<Math.ceil(quiz.items.length/quiz.perPage)-1){quiz.page++;renderQuiz();}
+    if(t.id==='submitBtn') { if(!confirm('Отправить ответы?')) return; quiz.score=0; quiz.submitted=true; quiz.page=0; renderQuiz(); window.scrollTo({top:0,behavior:'smooth'}); }
+    if(t.id==='resetBtn') initQuiz();
+  });
+  document.addEventListener('change', e=>{
+    const i=e.target;
+    if(i.matches('.match-select')){ const id=i.dataset.id, pi=i.dataset.pi; if(!quiz.answers[id])quiz.answers[id]={}; quiz.answers[id][pi]=i.value; const allE=Object.values(quiz.answers[id]).every(v=>v===''); if(allE)delete quiz.answers[id]; updateProg(); }
+    else if(i.matches('input[type="radio"], input[type="checkbox"]')){
+      const id=i.dataset.id, oi=parseInt(i.dataset.oi); let q=quiz.items.find(x=>x.id==id); if(!q)return;
+      if(q.type==='single') quiz.answers[id]=i.checked?oi:undefined;
+      else { let arr=quiz.answers[id]||[]; if(i.checked){if(!arr.includes(oi))arr.push(oi);} else arr=arr.filter(x=>x!==oi); quiz.answers[id]=arr.length?arr:undefined; } updateProg(); renderQuiz();
+    }
+  });
+  document.addEventListener('input', e=>{ if(e.target.matches('.t-input')){quiz.answers[e.target.dataset.id]=e.target.value;updateProg();} });
+});
+</script>
+</body>
+</html>
